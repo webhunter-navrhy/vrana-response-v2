@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="{{ site.lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ titulek or site.nazev }}</title>
+<meta name="description" content="{{ popis or site.popis }}">
+{% if site.navrh or noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
+<meta name="theme-color" content="{{ site.theme_color }}">
+<link rel="canonical" href="{{ site.url }}{{ cesta or '' }}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="cs_CZ">
+<meta property="og:title" content="{{ titulek or site.nazev }}">
+<meta property="og:description" content="{{ popis or site.popis }}">
+<meta property="og:url" content="{{ site.url }}{{ cesta or '' }}">
+{% if og_url %}<meta property="og:image" content="{{ og_url }}">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">{% endif %}
+<link rel="preload" href="{{ base }}fonts/instrument-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ base }}fonts/hanken-normal-400-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+<link rel="icon" href="{{ base }}img/orlice-navy.svg" type="image/svg+xml">
+{% block head %}{% endblock %}
+{% if jsonld %}<script type="application/ld+json">{{ jsonld|safe }}</script>{% endif %}
+</head>
+<body>
+<a class="skip" href="#obsah">Přeskočit na obsah</a>
+<header class="hlavicka">
+  <div class="hlavicka-pruh">
+    <a href="{{ url('') }}" class="logo" aria-label="{{ site.nazev }} – úvod"><img src="{{ base }}{{ site.logo }}" alt="{{ site.nazev }}" width="64" height="52"></a>
+    <p class="jste-zde" aria-live="polite"><span class="jz-tecka" aria-hidden="true"></span><span class="jz-popis">Jste zde</span><b data-jste-zde>Vstup</b></p>
+    <nav class="trasa" aria-label="Úniková cesta webem">
+      <ol class="trasa-linka" data-trasa>
+        {% for n in site.nav %}<li><a href="{{ n.href }}" data-stanice="{{ n.href[1:] }}"{% if loop.last %} class="shromazdiste"{% endif %}><span class="st-znak" aria-hidden="true">{% if loop.last %}<svg viewBox="0 0 20 20"><path d="M2 2l5 5M18 2l-5 5M2 18l5-5M18 18l-5-5M2 2v4M2 2h4M18 2h-4M18 2v4M2 18v-4M2 18h4M18 18h-4M18 18v-4"/></svg>{% endif %}</span><span class="st-nazev">{{ n.text }}</span></a></li>{% endfor %}
+      </ol>
+      <span class="trasa-ujeto" aria-hidden="true" data-ujeto></span>
+      <span class="trasa-tecka" aria-hidden="true" data-tecka></span>
+    </nav>
+    <a class="tl tl-hlava" href="#poptavka">Poptat kurz</a>
+    <button class="menu-tl" aria-expanded="false" aria-controls="plan-menu"><span class="menu-ikona" aria-hidden="true"></span><span class="menu-text">Plán</span></button>
+  </div>
+  <span class="mob-ujeto" aria-hidden="true" data-mob-ujeto></span>
+  <nav class="plan-menu" id="plan-menu" aria-label="Plán webu">
+    <p class="plan-menu-hlava">Evakuační plán · Vrána Response</p>
+    <ol>
+      {% for n in site.nav %}<li><a href="{{ n.href }}" data-stanice="{{ n.href[1:] }}"><span class="pm-c">{{ '%02d'|format(loop.index) }}</span>{{ n.text }}{% if loop.last %} <small>poptávka a kontakt</small>{% endif %}</a></li>{% endfor %}
+    </ol>
+    <p class="plan-menu-kontakt"><a href="mailto:{{ site.kontakt.email }}">{{ site.kontakt.email }}</a><a href="tel:{{ site.kontakt.telefon|replace(' ', '') }}">{{ site.kontakt.telefon }}</a></p>
+  </nav>
+</header>
+<main id="obsah">
+{% block obsah %}{% endblock %}
+</main>
+<footer class="paticka">
+  <div class="wrap">
+    <p class="paticka-heslo" aria-label="Be ready. Be safe.">Be ready.<br><em>Be safe<span>.</span></em></p>
+    <div class="paticka-radek">
+      <img src="{{ base }}img/orlice.svg" alt="" width="150" height="69" class="paticka-orlice">
+      <nav class="paticka-menu" aria-label="Patička">
+        {% for n in site.nav[1:-1] %}<a href="{{ n.href }}">{{ n.text }}</a>{% endfor %}
+        <a href="https://www.gryfix.cz" rel="noopener">Gryfix Experience ↗</a>
+      </nav>
+      <div class="paticka-kontakt">
+        <a href="mailto:{{ site.kontakt.email }}">{{ site.kontakt.email }}</a>
+        <a href="tel:{{ site.kontakt.telefon|replace(' ', '') }}">{{ site.kontakt.telefon }}</a>
+      </div>
+    </div>
+    <div class="paticka-spodek">
+      <p>© {{ site.rok if site.rok is defined else 2026 }} {{ site.nazev }} · Bc. Daniel Vrána{% if site.ico %} · IČO {{ site.ico }}{% endif %}</p>
+      <p>Fotografie jsou ilustrační.</p>
+    </div>
+  </div>
+</footer>
+<script src="{{ asset('js/main.js') }}" defer></script>
+</body>
+</html>
